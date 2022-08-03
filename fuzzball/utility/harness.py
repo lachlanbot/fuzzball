@@ -1,3 +1,4 @@
+from alive_progress import *
 import multiprocessing as MP
 from pwn import *
 
@@ -14,13 +15,13 @@ class Harness:
 
     def run(self, inputs):
         for test_input in inputs:
-            try:
-                self.test_payload(test_input)
-            except Exception as e:
-                print(f'[x] Harness.run error: {e}')
+            with alive_bar(len(test_input), dual_line=True, title='modifying content'.ljust(20)) as bar:
+                try:
+                    self.test_payload(test_input)
+                except Exception as e:
+                    print(f'[x] Harness.run error: {e}')
 
     def test_payload(self, payload):
-        # print(f'[+] "{type(payload)}" "{payload}"')
         if not isinstance(payload, str):
             try:
                 payload = payload.decode()
